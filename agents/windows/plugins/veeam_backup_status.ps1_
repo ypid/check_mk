@@ -62,7 +62,7 @@ foreach ($myJob in $myBackupJobs)
 
 	# For Non Backup Jobs (Replicas) we bail out
 	# because we are interested in the status of the original backup but
-	# for replicas the overall job state is all we need. 
+	# for replicas the overall job state is all we need.
         if ($myJob.IsBackup -eq $false) { continue }
 
 	# Each backup job has a number of tasks which were executed (VMs which were processed)
@@ -142,6 +142,29 @@ foreach ($myJob in $myBackupJobs)
 
 # END OF LOOP foreach ($myJob in $myBackupJobs)
 }
+
+
+# Get Endpoint backup jobs.
+$myVBREPBackupJobs = Get-VBREPJob
+
+# Iterate through all backup jobs
+foreach ($myJob in $myVBREPBackupJobs)
+{
+	$myJobName = ""
+	$myJobName = $myJob.Name -replace "\'","_" -replace " ","_"
+
+	$myJobType = ""
+	$myJobType = $myjob.Type
+
+	$myJobLastState = ""
+	$myJobLastState = $myJob.LastState
+
+	$myJobLastResult = ""
+	$myJobLastResult = $myJob.LastResult
+
+	$myJobsText = "$myJobsText" + "$myJobName" + "`t" + "$myJobType" + "`t" + "$myJobLastState" + "`t" + "$myJobLastResult" + "`n"
+}
+
 
 # Final output
 write-host $myJobsText
